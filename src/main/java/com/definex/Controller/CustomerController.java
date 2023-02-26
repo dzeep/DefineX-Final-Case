@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,18 +36,23 @@ public class CustomerController {
     }
 
     @PostMapping(value = "save")
-    public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customerDTO) throws ParseException {
+    public ResponseEntity saveCustomer(@RequestBody CustomerDTO customerDTO) throws ParseException {
         customerDTO.setId(customerDTO.getId());
         customerService.Create(customerDTO);
-        int max = 1500;
-        int min = 10;
+        int max = 1500; //max credit score
+        int min = 10;   // min credit score
         int randomCreditScore = (int) ((Math.random() * (max - min)) + min);
         customerDTO.setCreditScore(randomCreditScore) ;
         creditResultService.calculateCreditResult(customerDTO);
         CustomerDTO _customer1 = customerService.Create(customerDTO);
-        return ResponseEntity.ok(_customer1);
+        return ResponseEntity.status(HttpStatus.CREATED).body( "Account created successfully!");
     }
 
+/*
+    @PostMapping(value = "checkcredit")
+    public ResponseEntity<>
+
+*/
 
 
     @PutMapping(value = "update/{id}")
