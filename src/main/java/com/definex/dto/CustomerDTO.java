@@ -16,7 +16,7 @@ public class CustomerDTO implements Serializable {
     private LocalDate birthDate;
     private double collateral;
     private int creditScore;
-    private boolean creditResult;
+    private String creditResult;
     private double creditLimit;
 
 

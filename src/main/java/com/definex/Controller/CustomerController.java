@@ -38,21 +38,15 @@ public class CustomerController {
     @PostMapping(value = "save")
     public ResponseEntity saveCustomer(@RequestBody CustomerDTO customerDTO) throws ParseException {
         customerDTO.setId(customerDTO.getId());
-        customerService.Create(customerDTO);
-        int max = 1500; //max credit score
-        int min = 10;   // min credit score
+        int max = 1000; //max credit score
+        int min = 0;   // min credit score
         int randomCreditScore = (int) ((Math.random() * (max - min)) + min);
         customerDTO.setCreditScore(randomCreditScore) ;
         creditResultService.calculateCreditResult(customerDTO);
-        CustomerDTO _customer1 = customerService.Create(customerDTO);
+        customerService.Create(customerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body( "Account created successfully!");
     }
 
-/*
-    @PostMapping(value = "checkcredit")
-    public ResponseEntity<>
-
-*/
 
 
     @PutMapping(value = "update/{id}")

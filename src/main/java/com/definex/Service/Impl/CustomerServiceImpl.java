@@ -4,11 +4,14 @@ package com.definex.Service.Impl;
 
 import com.definex.Model.Customer;
 import com.definex.Repository.CustomerRepository;
+import com.definex.Service.CreditService;
 import com.definex.Service.CustomerService;
+import com.definex.dto.CreditDTO;
 import com.definex.dto.CustomerDTO;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -23,7 +26,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final ModelMapper modelMapper;
-
+    @Autowired
+    private CreditService billService;
     @Override
     public List<CustomerDTO> getCustomerList(){
         List<Customer> customerList = (List<Customer>) customerRepository.findAll();
@@ -33,8 +37,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO Create(CustomerDTO model) throws ParseException {
         Customer customer = modelMapper.map(model,Customer.class);
-
-            return modelMapper.map(customerRepository.save(customer),CustomerDTO.class);
+            CustomerDTO customerDTO = modelMapper.map(customerRepository.save(customer),CustomerDTO.class);
+            CreditDTO creditDTO = new CreditDTO();
+            creditDTO.setId(customer.getId());
+            creditDTO.setCreditResult(customer.getCreditResult());
+            creditDTO.setLimit(customer.getCreditLimit());
+            creditDTO.setIdentityNumber(customer.getIdentityNumber());
+            billService.Create(creditDTO);
+            return customerDTO;
 
     }
 
