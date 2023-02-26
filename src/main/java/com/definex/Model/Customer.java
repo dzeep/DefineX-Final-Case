@@ -41,7 +41,7 @@ public class Customer {
     private int creditScore;
 
     @Column(name = "credit_result", nullable = true)
-    private boolean creditResult;
+    private String creditResult;
 
     @Column(name = "credit_limit", nullable = true)
     private double creditLimit;

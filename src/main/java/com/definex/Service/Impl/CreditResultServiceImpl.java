@@ -25,7 +25,7 @@ public class CreditResultServiceImpl implements CreditResultService {
         double creditLimitMultiplier = 4.0; // Varsayılan kredi limit çarpanı
 
         if (creditScore < 500) {
-            customer.setCreditResult(false);
+            customer.setCreditResult("denied");
             customer.setCreditLimit(0);
             return false;
         } else if (creditScore >= 500 && creditScore <= 1000 && customer.getMonthlyIncome() < 5000) {
@@ -34,6 +34,7 @@ public class CreditResultServiceImpl implements CreditResultService {
                 limit += customer.getCollateral() * 0.1;
             }
             customer.setCreditLimit(limit);
+            customer.setCreditResult("approved");
             return true;
         } else if (creditScore >= 500 && creditScore <= 1000 && customer.getMonthlyIncome() >= 5000 && customer.getMonthlyIncome() <= 10000) {
             double limit = 20000.0;
@@ -41,6 +42,8 @@ public class CreditResultServiceImpl implements CreditResultService {
                 limit += customer.getCollateral() * 0.2;
                 customer.setCreditLimit(limit);
             }
+            customer.setCreditLimit(limit);
+            customer.setCreditResult("approved");
             return true;
         } else if (creditScore >= 500 && creditScore <= 1000 && customer.getMonthlyIncome() > 10000) {
             double limit = customer.getMonthlyIncome() * creditLimitMultiplier / 2;
@@ -48,12 +51,16 @@ public class CreditResultServiceImpl implements CreditResultService {
                 limit += customer.getCollateral() * 0.25;
                 customer.setCreditLimit(limit);
             }
+            customer.setCreditLimit(limit);
+            customer.setCreditResult("approved");
             return true;
         } else if (creditScore >= 1000) {
             double limit = customer.getMonthlyIncome() * creditLimitMultiplier;
             if (customer.getCollateral() != 0) {
                 limit += customer.getCollateral() * 0.5;
                 customer.setCreditLimit(limit);
+                customer.setCreditResult("approved");
+
             }
         } else {
             return false;
